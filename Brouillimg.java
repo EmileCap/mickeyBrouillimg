@@ -161,7 +161,15 @@ public class Brouillimg {
 
         BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        
+        for (int y = 0; y < height; y++) {
+            int autreY = perm[y];
+            for (int x = 0; x < width; x++) {
+                int couleur = inputImg.getRGB(x, y);
+                out.setRGB(x, autreY, couleur);
+            }
+
+
+        }
 
         return out;
 
