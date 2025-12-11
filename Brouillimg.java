@@ -1,9 +1,10 @@
+// lire et écrire des images
 import javax.imageio.ImageIO;
-
+//modifier des pixels
 import java.awt.image.BufferedImage;
-
+//creer des fichiers ou repertoire
 import java.io.File;
-
+//gere les erreurs lié aux fichiers
 import java.io.IOException;
 
 import java.util.concurrent.atomic.AtomicInteger;
