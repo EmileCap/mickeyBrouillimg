@@ -191,13 +191,11 @@ public class Brouillimg {
      */
 
     public static int scrambledId(int id, int size, int key) {
-        String keytemp = Integer.toBinaryString(key);
-        int r = Integer.parseInt(keytemp.substring(0, keytemp.length()/2+1));
-        int s = Integer.parseInt(keytemp.substring(keytemp.length()/2+1));
-
-
-        return (r+(2*s+1)*id)%size;
-
+        int r = key & 0xFF;
+        int s = (key >> 8) & 0x7F;
+        return (r + (2 * s + 1) * id) % size;
     }
+
+
 
 }
