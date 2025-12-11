@@ -19,9 +19,9 @@ public class Brouillimg {
 
     public static void main(String[] args) throws IOException {
 
-        if (args.length < 2) {
+        if (args.length < 3) {
 
-            System.err.println("Usage: java Brouillimg <image_claire> <clé> [image_sortie]");
+            System.err.println("Usage: java Brouillimg <image_claire> <clé> <scramble ou unscramble> [image_sortie]");
 
             System.exit(1);
 
@@ -29,12 +29,13 @@ public class Brouillimg {
 
         String inPath = args[0]; 
 
-        String outPath = (args.length >= 3) ? args[2] : "out.png";
+        String outPath = (args.length >= 4) ? args[3] : "out.png";
 
         // Masque 0x7FFF pour garantir que la clé ne dépasse pas les 15 bits
 
         int key = Integer.parseInt(args[1]) & 0x7FFF ; //clé de chiffrement
 
+        String mélange = args[2];
 
         BufferedImage inputImage = ImageIO.read(new File(inPath)); //image brouillé
 
@@ -55,7 +56,6 @@ public class Brouillimg {
         // Pré‑calcul des lignes en niveaux de gris pour accélérer le calcul du critère
 
         int[][] inputImageGL = rgb2gl(inputImage); //image en niveau d gris
-
 
         int[] perm = generatePermutation(height, key); //permutation de hauteur par la clé
 
@@ -167,8 +167,6 @@ public class Brouillimg {
                 int couleur = inputImg.getRGB(x, y);
                 out.setRGB(x, autreY, couleur);
             }
-
-
         }
 
         return out;
@@ -176,23 +174,28 @@ public class Brouillimg {
     }
 
 
-    /**
+    public static BufferedImage unscrambleLines(BufferedImage inputImg, int[] perm) {
 
-     * Renvoie la position de la ligne id dans l'image brouillée.
 
-     * @param id  indice de la ligne dans l'image claire (0..size-1)
+    }
 
-     * @param size nombre total de lignes dans l'image
+        /**
 
-     * @param key clé de brouillage (15 bits)
+         * Renvoie la position de la ligne id dans l'image brouillée.
 
-     * @return indice de la ligne dans l'image brouillée (0..size-1)
+         * @param id  indice de la ligne dans l'image claire (0..size-1)
 
-     */
+         * @param size nombre total de lignes dans l'image
+
+         * @param key clé de brouillage (15 bits)
+
+         * @return indice de la ligne dans l'image brouillée (0..size-1)
+
+         */
 
     public static int scrambledId(int id, int size, int key) {
-        int r = key & 0xFF;
-        int s = (key >> 8) & 0x7F;
+        int s = key & 0xFF;
+        int r = (key >> 8) & 0x7F;
         return (r + (2 * s + 1) * id) % size;
     }
 
