@@ -219,7 +219,8 @@ public class Brouillimg {
         int s = key & 0x7F;
         int r = (key >> 7) & 0xFF;
 
-        // & (size-1) => c'est genre le et en logique une peu, ca compare chaque bit et ca regarde ca met a 1 quand les deux donne 1 et 0 quand c'est deux 0 ou deux dif
+        // & (size-1) => c'est genre le et en logique une peu, ca compare chaque bit et ca regarde ca met a 1 quand les deux donne 1 et 0 quand c'est deux 0 ou deux different
+        // https://www.geeksforgeeks.org/java/bitwise-operators-in-java/
         return (r + (2 * s + 1) * id) & (size - 1);
     }
 
