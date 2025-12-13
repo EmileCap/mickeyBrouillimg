@@ -35,7 +35,7 @@ public class Brouillimg {
 
         int key = Integer.parseInt(args[1]) & 0x7FFF ; //clé de chiffrement
 
-        String mélange = args[2];
+        int action = Integer.parseInt(args[2]); // 0 = brouiller, 1 = débrouiller
 
         BufferedImage inputImage = ImageIO.read(new File(inPath)); //image brouillé
 
@@ -59,8 +59,14 @@ public class Brouillimg {
 
         int[] perm = generatePermutation(height, key); //permutation de hauteur par la clé
 
+        BufferedImage scrambledImage;
 
-        BufferedImage scrambledImage = scrambleLines(inputImage, perm);
+        if (action == 0) {
+            scrambledImage = scrambleLines(inputImage, perm);
+        } else {
+            scrambledImage = unscrambleLines(inputImage, perm);
+        }
+
 
         ImageIO.write(scrambledImage, "png", new File(outPath));
 
@@ -177,6 +183,22 @@ public class Brouillimg {
     public static BufferedImage unscrambleLines(BufferedImage inputImg, int[] perm) {
 
 
+        int width = inputImg.getWidth();
+        int height = inputImg.getHeight();
+
+        if (perm.length != height) throw new IllegalArgumentException("Taille d'image <> taille permutation");
+
+        BufferedImage out = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < height; y++) {
+            int autreY = perm[y];
+            for (int x = 0; x < width; x++) {
+                int couleur = inputImg.getRGB(x, autreY);
+                out.setRGB(x, y, couleur);
+            }
+        }
+
+        return out;
     }
 
         /**
@@ -194,9 +216,11 @@ public class Brouillimg {
          */
 
     public static int scrambledId(int id, int size, int key) {
-        int s = key & 0xFF;
-        int r = (key >> 8) & 0x7F;
-        return (r + (2 * s + 1) * id) % size;
+        int s = key & 0x7F;
+        int r = (key >> 7) & 0xFF;
+
+        // & (size-1) => c'est genre le et en logique une peu, ca compare chaque bit et ca regarde ca met a 1 quand les deux donne 1 et 0 quand c'est deux 0 ou deux dif
+        return (r + (2 * s + 1) * id) & (size - 1);
     }
 
 
