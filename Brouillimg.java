@@ -21,7 +21,7 @@ public class Brouillimg {
 
         if (args.length < 3) {
 
-            System.err.println("Usage: java Brouillimg <image_claire> <clé> <scramble ou unscramble> [image_sortie]");
+            System.err.println("Usage: java Brouillimg <image_claire> <clé> <scramble, unscramble ou cassage> [image_sortie]");
 
             System.exit(1);
 
@@ -63,8 +63,12 @@ public class Brouillimg {
 
         if (action == 0) {
             scrambledImage = scrambleLines(inputImage, perm);
-        } else {
+        } else if (action == 1){
             scrambledImage = unscrambleLines(inputImage, perm);
+        }
+        else{
+            perm = generatePermutation(height, breakkey(inputImageGL));
+            scrambledImage = unscrambleLines(inputImage ,perm);
         }
 
 
@@ -72,8 +76,65 @@ public class Brouillimg {
 
         System.out.println("Image écrite: " + outPath);
 
+
+
+    }
+    public static double euclideanDistance(int[] xGL, int[] yGL){
+        int width = xGL.length;
+        double disteuclid = 0;
+        for(int i = 0; i< width ; i++){
+            int diff = xGL[i] - yGL[i];
+            disteuclid += diff * diff;
+        }
+        return Math.sqrt(disteuclid);
+
+
+    }
+    public static double scoreEuclidean(int[][] inputGL){
+        double scoretotal = 0;
+        int height = inputGL.length;
+        for(int i = 0; i < height-1;i++){
+            scoretotal += euclideanDistance(inputGL[i], inputGL[i+1]);
+        }
+        return scoretotal;
+    }    
+    public static int breakkey(int[][] inputGL) {
+        int bestKey = 0;
+        double bestScore = Double.MAX_VALUE;
+    
+        for (int key = 0; key < 32768; key++) {
+            int[] perm = generatePermutation(inputGL.length, key);
+            int[][] candidate = unscrambleLinesGL(inputGL, perm);
+    
+            double score = scoreEuclidean(candidate);
+    
+            if (score < bestScore) {
+                bestScore = score;
+                bestKey = key;
+            }
+        }
+        return bestKey;
     }
 
+    public static int[][] unscrambleLinesGL(int[][] inputGL, int[] perm) {
+
+        int height = inputGL.length;
+        int width = inputGL[0].length;
+    
+        if (perm.length != height)
+            throw new IllegalArgumentException("Taille image <> permutation");
+    
+        int[][] out = new int[height][width];
+    
+        for (int y = 0; y < height; y++) {
+            int autreY = perm[y];
+            out[y] = inputGL[autreY].clone();
+        }
+    
+        return out;
+    }
+    
+    
 
     /**
 
