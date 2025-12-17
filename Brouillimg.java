@@ -27,7 +27,7 @@ public class Brouillimg {
 
         }
 
-        String inPath = args[0]; 
+        String inPath = args[0];
 
         String outPath = (args.length >= 4) ? args[3] : "out.png";
 
@@ -97,17 +97,17 @@ public class Brouillimg {
             scoretotal += euclideanDistance(inputGL[i], inputGL[i+1]);
         }
         return scoretotal;
-    }    
+    }
     public static int breakkey(int[][] inputGL) {
         int bestKey = 0;
         double bestScore = Double.MAX_VALUE;
-    
+
         for (int key = 0; key < 32768; key++) {
             int[] perm = generatePermutation(inputGL.length, key);
             int[][] candidate = unscrambleLinesGL(inputGL, perm);
-    
+
             double score = scoreEuclidean(candidate);
-    
+
             if (score < bestScore) {
                 bestScore = score;
                 bestKey = key;
@@ -120,21 +120,21 @@ public class Brouillimg {
 
         int height = inputGL.length;
         int width = inputGL[0].length;
-    
+
         if (perm.length != height)
             throw new IllegalArgumentException("Taille image <> permutation");
-    
+
         int[][] out = new int[height][width];
-    
+
         for (int y = 0; y < height; y++) {
             int autreY = perm[y];
             out[y] = inputGL[autreY].clone();
         }
-    
+
         return out;
     }
-    
-    
+
+
 
     /**
 
@@ -258,6 +258,8 @@ public class Brouillimg {
                 out.setRGB(x, y, couleur);
             }
         }
+
+
 
         return out;
     }
