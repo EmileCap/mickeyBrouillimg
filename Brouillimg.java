@@ -7,11 +7,6 @@ import java.io.File;
 //gere les erreurs lié aux fichiers
 import java.io.IOException;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import java.util.concurrent.atomic.AtomicLong;
-
-import java.util.stream.IntStream;
 
 
 public class Brouillimg {
@@ -62,14 +57,19 @@ public class Brouillimg {
         BufferedImage scrambledImage;
 
 
-        if (action == 0) {
-            scrambledImage = scrambleLines(inputImage, perm);
-        } else if (action == 1){
-            scrambledImage = unscrambleLines(inputImage, perm);
-        }
-        else{
-            perm = generatePermutation(height, breakkey(inputImageGL));
-            scrambledImage = unscrambleLines(inputImage ,perm);
+        switch (action) {
+            case 0:
+                scrambledImage = scrambleLines(inputImage, perm);
+                break;
+
+            case 1:
+                scrambledImage = unscrambleLines(inputImage, perm);
+                break;
+
+            default:
+                perm = generatePermutation(height, breakkey(inputImageGL));
+                scrambledImage = unscrambleLines(inputImage, perm);
+                break;
         }
 
 
