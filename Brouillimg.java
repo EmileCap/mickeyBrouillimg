@@ -61,6 +61,7 @@ public class Brouillimg {
 
         BufferedImage scrambledImage;
 
+
         if (action == 0) {
             scrambledImage = scrambleLines(inputImage, perm);
         } else if (action == 1){
@@ -280,7 +281,7 @@ public class Brouillimg {
 
     public static int scrambledId(int id, int size, int key) {
         int s = key & 0x7F;
-        int r = (key >> 6) & 0xFF;
+        int r = (key >> 7) & 0xFF;
 
         return (r + (2 * s + 1) * id) % size;
     }
